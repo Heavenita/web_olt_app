@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="img1" class="img1">
+    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="img2" class="img2">
+    <title>Status ONU</title>
+    <link rel="icon" src="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+</head>
+
+<body>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card text-center w-100" style="max-width: 600px;">
+            <h2 class="fw-bold mb-3">Status ONU</h2>
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+                <input type="radio" class="btn-check" id="opt1" name="modo" value="192.168.1.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt1">OLT - SPG</label>
+
+                <input type="radio" class="btn-check" id="opt2" name="modo" value="192.168.2.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt2">OLT - NHO4</label>
+
+                <input type="radio" class="btn-check" id="opt3" name="modo" value="192.168.3.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt3">OLT - POA4</label>
+
+                <input type="radio" class="btn-check" id="opt4" name="modo" value="1192.168.4.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt4">OLT - CAN</label>
+
+                <input type="radio" class="btn-check" id="opt5" name="modo" value="192.168.5.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt5">OLT - POA3</label>
+
+                <input type="radio" class="btn-check" id="opt6" name="modo" value="192.168.6.10" autocomplete="off">
+                <label class="btn btn-outline-primary" for="opt6">OLT - SLE2</label>
+            </div>
+
+            <div class="input-group w-75 mx-auto mb-3">
+                <span class="input-group-text">Cliente:</span>
+                <input type="text" id="cliente" class="form-control" placeholder="Digite o nome do cliente">
+            </div>
+
+            <button class="btn btn-primary px-4" id="btnPesquisar">Pesquisar</button>
+
+            <p id="oltSelecionada" class="mt-4 text-secondary small oltSelecionada"></p>
+
+        </div>
+    </div>
+
+    <div id="loadingOverlay">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+    
+    <div id="jsonOverlay">
+     <div class="close-btn" id="closeJson">&times;</div>
+     <div class="icon-btn" id="unlockedBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+            <path fill="#007bff" d="M256 160L256 224L384 224L384 160C384 124.7 355.3 96 320 96C284.7 96 256 124.7 256 160zM192 224L192 160C192 89.3 249.3 32 320 32C390.7 32 448 89.3 448 160L448 224C483.3 224 512 252.7 512 288L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 288C128 252.7 156.7 224 192 224z"/>
+        </svg>
+     </div>
+     <div class="json-container" id="jsonContainer">
+     <!-- Cards JSON serão inseridos aqui -->
+     </div>
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+body {
+      background-color: #f4f7fb;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    .card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .btn-outline-primary {
+      border-width: 2px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .btn-check:checked + .btn-outline-primary {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .input-group-text {
+      font-weight: 500;
+    }
+
+    img {
+      position: absolute;
+      z-index: -1;
+    }
+
+    img, svg {
+      vertical-align: middle;
+    }
+
+    .img1 {
+      left: -250px;
+      bottom: -250px;
+      transform: rotate(202deg);
+      width: 900px;
+    }
+
+    .img2 {
+      right: -100px;
+      top: -50px;
+      width: 300px;
+      transform: rotate(347deg);
+    }
+
+    img {
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    }
+
+    html, body{
+      overflow: hidden;
+    }
+    
+    #loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(244, 247, 251, 0.9);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    backdrop-filter: blur(3px); 
+    transition: opacity 0.3s ease;
+    }
+
+    #loadingOverlay.show {
+    display: flex;
+    opacity: 1;
+    }
+
+    #loadingOverlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    }
+
+    #loadingOverlay p {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #007bff;
+    }
+
+#jsonOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 60px 20px;
+}
+
+#jsonOverlay.show { 
+    display: flex; 
+    animation: fadein 0.3s ease;
+    }
+
+#jsonOverlay .json-container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    display: grid;
+    /* cards maiores lateralmente */
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 20px;
+    max-width: -webkit-fill-available;
+    box-shadow: 0 0 25px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* Cards de JSON */
+.json-card {
+    padding: 20px;
+    border-radius: 12px;
+    color: #fff;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;
+    transition: transform 0.2s;
+}
+
+.json-card:hover {
+    transform: scale(1.03);
+}
+
+.json-card.online { background-color: #28a745 !important; }
+.json-card.offline { background-color: #dc3545 !important; }
+.json-card.other { background-color: #6c757d !important; }
+
+.json-card.online:hover {
+     background-color: #1cd446 !important;
+     color: white;
+}
+
+.btn-check:checked + .json-card.online {
+     background-color: #1cd446 !important;
+     color: white;
+     transform: scale(1.03);
+     transition: all 0.2s ease;
+}
+
+.json-card.offline:hover{
+     background-color: #a71d2a !important;
+     color: white;
+}
+
+.btn-check:checked + .json-card.offline{
+     background-color: #a71d2a !important;
+     color: white !important;
+     transform: scale(1.03);
+}
+
+.json-card p { margin: 3px 0; }
+
+/* Fechar overlay */
+#jsonOverlay .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem;
+    color: #333;
+    cursor: pointer;
+}
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  width: 36px; /* largura fixa */
+  height: 36px; /* altura fixa — garante o círculo */
+  display: flex; /* centraliza conteúdo */
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: red !important;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: red;
+  color: white !important; /* inverte as cores no hover */
+  transform: scale(1.1);
+}
+
+.icon-btn svg {
+  width: 36px;
+  height: 36px;
+  transition: all 0.3s ease;
+  display: flex;
+  position: absolute;
+  top: 15px;
+  right: 70px;
+  cursor: pointer;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  border-radius: 50%; 
+}
+
+.icon-btn svg {
+  fill: #007bff;
+  transition: fill 0.3s ease;
+}
+
+.icon-btn svg:hover{
+  background-color: #007bff !important;
+  transform: scale(1.1);
+  fill: white !important;
+}
+
+.icon-btn:hover svg path{
+  fill: white;
+} 
+
+
