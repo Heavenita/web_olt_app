@@ -22,22 +22,22 @@
         <div class="card text-center w-100" style="max-width: 600px;">
             <h2 class="fw-bold mb-3">Status ONU</h2>
             <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
-                <input type="radio" class="btn-check" id="opt1" name="modo" value="192.168.1.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt1" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt1">OLT - SPG</label>
 
-                <input type="radio" class="btn-check" id="opt2" name="modo" value="192.168.2.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt2" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt2">OLT - NHO4</label>
 
-                <input type="radio" class="btn-check" id="opt3" name="modo" value="192.168.3.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt3" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt3">OLT - POA4</label>
 
-                <input type="radio" class="btn-check" id="opt4" name="modo" value="1192.168.4.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt4" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt4">OLT - CAN</label>
 
-                <input type="radio" class="btn-check" id="opt5" name="modo" value="192.168.5.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt5" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt5">OLT - POA3</label>
 
-                <input type="radio" class="btn-check" id="opt6" name="modo" value="192.168.6.10" autocomplete="off">
+                <input type="radio" class="btn-check" id="opt6" name="modo" value="?" autocomplete="off">
                 <label class="btn btn-outline-primary" for="opt6">OLT - SLE2</label>
             </div>
 
@@ -60,10 +60,20 @@
     </div>
     
     <div id="jsonOverlay">
-     <div class="close-btn" id="closeJson">&times;</div>
-     <div class="icon-btn" id="unlockedBtn">
+     <div class="close-btn" id="closeJson">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+            <path d="M504.6 148.5C515.9 134.9 514.1 114.7 500.5 103.4C486.9 92.1 466.7 93.9 455.4 107.5L320 270L184.6 107.5C173.3 93.9 153.1 92.1 139.5 103.4C125.9 114.7 124.1 134.9 135.4 148.5L278.3 320L135.4 491.5C124.1 505.1 125.9 525.3 139.5 536.6C153.1 547.9 173.3 546.1 184.6 532.5L320 370L455.4 532.5C466.7 546.1 486.9 547.9 500.5 536.6C514.1 525.3 515.9 505.1 504.6 491.5L361.7 320L504.6 148.5z"/>
+        </svg>
+     </div>
+     <div class="unlocked-btn" id="unlockedBtn">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
             <path fill="#007bff" d="M256 160L256 224L384 224L384 160C384 124.7 355.3 96 320 96C284.7 96 256 124.7 256 160zM192 224L192 160C192 89.3 249.3 32 320 32C390.7 32 448 89.3 448 160L448 224C483.3 224 512 252.7 512 288L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 288C128 252.7 156.7 224 192 224z"/>
+        </svg>
+     </div>
+
+     <div class="reboot-btn" id="rebootButton">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+            <path d="M552 256L408 256C398.3 256 389.5 250.2 385.8 241.2C382.1 232.2 384.1 221.9 391 215L437.7 168.3C362.4 109.7 253.4 115 184.2 184.2C109.2 259.2 109.2 380.7 184.2 455.7C259.2 530.7 380.7 530.7 455.7 455.7C463.9 447.5 471.2 438.8 477.6 429.6C487.7 415.1 507.7 411.6 522.2 421.7C536.7 431.8 540.2 451.8 530.1 466.3C521.6 478.5 511.9 490.1 501 501C401 601 238.9 601 139 501C39.1 401 39 239 139 139C233.3 44.7 382.7 39.4 483.3 122.8L535 71C541.9 64.1 552.2 62.1 561.2 65.8C570.2 69.5 576 78.3 576 88L576 232C576 245.3 565.3 256 552 256z"/>
         </svg>
      </div>
      <div class="json-container" id="jsonContainer">

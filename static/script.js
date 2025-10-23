@@ -5,16 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeJson = document.getElementById('closeJson');
     const btn = document.getElementById('btnPesquisar');
     const unlockedBtn = document.getElementById('unlockedBtn');
+    const rebootButton = document.getElementById('rebootButton');
 
     document.addEventListener('keydown', function (enter) {
-        // Acionar busca ao pressionar Enter.
+        // Adiciona funcionalidade de Enter para o botão de pesquisa
         if (enter.key === "Enter") {
             document.getElementById('btnPesquisar').click();
         }
     });
 
     btn.addEventListener('click', function () {
-        // Buscar status da ONU.
+        // Buscar status da ONU
         const modo = document.querySelector('input[name="modo"]:checked');
         if (!modo) { alert("Selecione uma OLT!"); return; }
 
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     unlockedBtn.addEventListener('click', () => {
-        // Liberar ONU selecionada.
+        // Liberar ONU
         loadingOverlay.classList.add('show');
         const onu = document.querySelector('input[name="onu"]:checked');
         if (!onu) { alert("Selecione uma ONU!"); return; }
@@ -106,6 +107,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert("Erro: "+ data.mensagem);
                 loadingOverlay.classList.remove('show');
 		return;
+            }
+        })
+        .catch(err => console.error(err));
+    });
+
+    rebootButton.addEventListener('click', () => { 
+        // Reboot ONU
+        loadingOverlay.classList.add('show');
+        const onu = document.querySelector('input[name="onu"]:checked');
+        if (!onu) { alert("Selecione uma ONU!"); return; }
+        fetch(`/olt/reboot/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ onu: onu.id })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if (data.status === "ok"){
+                alert("Reboot da ONU foi realizado.");
+                loadingOverlay.classList.remove('show');
+                return;}
+            else{
+                alert("Erro: "+ data.mensagem);
+                loadingOverlay.classList.remove('show');
+                return;
             }
         })
         .catch(err => console.error(err));

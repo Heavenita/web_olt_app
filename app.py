@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from netmiko import ConnectHandler
+import time
 import re
 import json
 
@@ -7,8 +8,8 @@ app = Flask(__name__)
 
 def processar_output_ont(output, olt_ip):
     
-    #Extrai fsp, ont_id, sn, run_state e description do output da OLT Huawei (display ont info by-desc).
-    #Retorna lista de dicionários.
+    # Extrai fsp, ont_id, sn, run_state e description do output da OLT Huawei (display ont info by-desc).
+    # Retorna lista de dicionários.
     
 
     # 1) padrão que identifica as linhas da tabela com SN e run state
@@ -42,7 +43,7 @@ def processar_output_ont(output, olt_ip):
             "sn": m.group('sn'),
             "run_state": m.group('run_state'),
             "description": "",
-	    "olt_ip": olt_ip
+	        "olt_ip": olt_ip
         }
 
     # percorre possíveis linhas de description e associa
@@ -67,13 +68,13 @@ def processar_output_ont(output, olt_ip):
                 "sn": None,
                 "run_state": None,
                 "description": desc,
-		"olt_ip": olt_ip
+		        "olt_ip": olt_ip
             }
 
     # retorna a lista de valores
     return list(entries.values())
 
-def buscar_sinal_ont(olt_ip, onts):
+def buscar_sinal_ont(olt_ip, onts):    
     # Atualiza a lista de ONTs com o sinal óptico (se online) ou alarm-state (se offline)
     
     from netmiko import ConnectHandler
@@ -94,11 +95,11 @@ def buscar_sinal_ont(olt_ip, onts):
         slot_groups[(frame, slot)].append(ont)
 
     for (frame, slot), ont_group in slot_groups.items():
-        ssh.send_command(f"interface gpon {frame}/{slot}", expect_string=r"\(config-if-gpon", read_timeout=10)
+        ssh.send_command(f"interface gpon {frame}/{slot}", expect_string=r"\(config-if-gpon", read_timeout=10) #Acessa a interface GPON do slot da OLT 
 
         # Dividir ONTs online e offline
-        online_onts = [ont for ont in ont_group if ont['run_state'] == "online"]
-        offline_onts = [ont for ont in ont_group if ont['run_state'] != "online"]
+        online_onts = [ont for ont in ont_group if ont['run_state'] == "online"] #ONTs ONLINE
+        offline_onts = [ont for ont in ont_group if ont['run_state'] != "online"] #ONTs OFFLINE
 
         # --- ONTs ONLINE ---
         if online_onts:
@@ -107,26 +108,26 @@ def buscar_sinal_ont(olt_ip, onts):
             for ont in online_onts:
                 pon = int(ont['fsp'].split('/')[2])
                 ont_id = int(ont['ont_id'])
-                output = ssh.send_command(f"display ont optical-info {pon} {ont_id}", read_timeout=15)
+                output = ssh.send_command(f"display ont optical-info {pon} {ont_id}", read_timeout=15) #Comando para buscar sinal óptico da ONU
 
                 match = re.search(r"Rx optical power\(dBm\)\s*:\s*([-\d.]+)", output)
-                ont['rx_power'] = float(match.group(1)) if match else None
+                ont['rx_power'] = float(match.group(1)) if match else None #Valor do sinal óptico em dBm
 
         # --- ONTs OFFLINE ---
         if offline_onts:
             for ont in offline_onts:
                 pon = int(ont['fsp'].split('/')[2])
                 ont_id = int(ont['ont_id'])
-                output = ssh.send_command(f"display ont alarm-state {pon} {ont_id}", read_timeout=10)
+                output = ssh.send_command(f"display ont alarm-state {pon} {ont_id}", read_timeout=10) #Comando para buscar alarm-state da ONU
 
                 match = re.search(r"Active Alarm List\s*:\s*\n\s*\((?:\d+)\)(.+)", output, re.IGNORECASE)
-                ont['alarm'] = match.group(1).strip() if match else None
+                ont['alarm'] = match.group(1).strip() if match else None 
 
     ssh.disconnect()
     return onts
 
 def acesso(olt_ip):
-    #Dicionario para utilizar noa cesso a OLT Huawei
+    # Retorna um dicionário de conexão para a OLT Huawei.
     olt = {
         "device_type": "huawei_smartax",
         "ip": olt_ip,
@@ -137,6 +138,7 @@ def acesso(olt_ip):
     return olt
 
 def libera_onu(fsp, olt_ip):
+    # Libera a ONU na OLT Huawei dado o fsp (frame/slot/pon/ont_id) e o IP da OLT.
     device = acesso(olt_ip)
 
     #Executa a liberação de acesso via http por linha de comando na OLT
@@ -147,7 +149,7 @@ def libera_onu(fsp, olt_ip):
         ssh = ConnectHandler(**device)
         ssh.send_command("enable", expect_string=r"#", read_timeout=10)
         ssh.send_command("diagnose", expect_string=r"\(diagnose\)%%", read_timeout=10)
-        output = ssh.send_command(f"ont wan-access http {fsp} enable")
+        output = ssh.send_command(f"ont wan-access http {fsp} enable") #Comando de liberação da ONU via HTTP
         ssh.disconnect()
 
         return {"status": "ok", "mensagem": output}
@@ -166,23 +168,23 @@ def status_olt():
     dados = request.get_json()
     olt_ip = dados["olt"]
     cliente = dados["cliente"]
-
-    olt = acesso(olt_ip)
-    # Conecta na OLT e executa o comando
+    
+    olt = acesso(olt_ip)    
     try:
         ssh = ConnectHandler(**olt)
         ssh.send_command("enable", expect_string=r"#", read_timeout=10)
 
-        output = ssh.send_command(f"display ont info by-desc {cliente.lower()}", read_timeout=25)
+        output = ssh.send_command(f"display ont info by-desc {cliente.lower()}", read_timeout=25) #Comando para buscar a ONU pelo nome/descritivo
         ssh.disconnect()
 
         dados = processar_output_ont(output, olt_ip)
-        #
+
         dados_atualizados = buscar_sinal_ont(olt_ip, dados)
         return jsonify(dados_atualizados)
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
+
 
 @app.route('/olt/unlocked/', methods=['POST'])
 def unlockedBtn():
@@ -195,5 +197,29 @@ def unlockedBtn():
     dados = libera_onu(fsp, olt_ip)
 
     return jsonify(dados)
+
+@app.route('/olt/reboot/', methods=['POST'])
+def reboot_onu():
+    # Recebe dados da ONU e realiza o reboot na OLT Huawei
+    dados = request.get_json()
+    infos = dados['onu'].split(',')
+    olt_ip = infos[0]
+    fsp = infos[1]
+    device = acesso(olt_ip)
+    try:
+        ssh = ConnectHandler(**device)
+        ssh.send_command("enable", expect_string=r"#", read_timeout=10)
+        ssh.send_command("diagnose", expect_string=r"\(diagnose\)%%", read_timeout=10)
+        output = ssh.send_command_timing(f"ont force-reset {fsp}") #Comando de reboot da ONU
+        
+        # Se for solicitado confirmação, envia "y" para confirmar o reboot
+        if "Are you sure to reset" in output: 
+            output += ssh.send_command_timing("y")
+
+        ssh.disconnect()
+        return jsonify({"status": "ok", "mensagem": output})
+    except Exception as e:
+        return jsonify({"status": "erro", "mensagem": str(e)})
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5169, debug=True)
+    app.run(host="0.0.0.0", port=169, debug=True)
