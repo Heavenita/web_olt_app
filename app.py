@@ -75,11 +75,7 @@ def processar_output_ont(output, olt_ip):
     return list(entries.values())
 
 def buscar_sinal_ont(olt_ip, onts):    
-    # Atualiza a lista de ONTs com o sinal óptico (se online) ou alarm-state (se offline)
-    
-    from netmiko import ConnectHandler
-    import re
-    from collections import defaultdict
+    # Atualiza a lista de ONTs com o sinal óptico (se online) ou alarm-state (se offline)
 
     # Conecta na OLT
     device = acesso(olt_ip)
